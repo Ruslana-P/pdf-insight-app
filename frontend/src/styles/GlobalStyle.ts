@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${({ theme }) => theme.font.sans};
     line-height: 1.5;
     color: ${({ theme }) => theme.colors.text};
+    background: #060608;
     background: ${({ theme }) => theme.colors.bg};
     -webkit-font-smoothing: antialiased;
   }

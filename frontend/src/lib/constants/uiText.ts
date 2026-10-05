@@ -1,6 +1,8 @@
 export const APP_COPY = {
+  scrollToTop: 'Przewiń na górę',
   title: 'PDF Insight',
-  lead: 'Wgraj PDF, aby uzyskać podsumowanie i dane strukturalne.',
+  lead: 'Uzyskaj podsumowanie i dane strukturalne twojego PDF w',
+  leadEmphasis: 'dwa kliki.',
   instructions:
     'Przeciągnij plik PDF w okienko poniżej lub kliknij przycisk „Wgraj”, aby wybrać odpowiedni plik (max. 10 MB).',
   selectedFileLabel: 'Wybrany plik:',
@@ -21,7 +23,7 @@ export const ANALYSIS_COPY = {
 } as const;
 
 export const RESULTS_COPY = {
-  documentHeading: 'Dokument',
+  documentHeading: 'Analiza dokumentu',
   summaryHeading: 'Podsumowanie',
   keyPointsHeading: 'Kluczowe informacje',
   entitiesHeading: 'Podmioty',
@@ -76,7 +78,6 @@ export const VALIDATION_MESSAGES = {
 
 export const HISTORY_COPY = {
   heading: 'Historia analiz',
-  lead: 'Ostatnie wyniki zapisane lokalnie w przeglądarce.',
   empty: 'Brak zapisanych analiz.',
   buttonDownloadJson: 'Pobierz JSON',
   buttonRemove: 'Usuń',

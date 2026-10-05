@@ -2,18 +2,18 @@ import { DOCUMENT_TYPE_LABELS, HISTORY_COPY } from '../../lib/constants';
 import { formatAnalyzedAt } from '../../lib/formatAnalyzedAt';
 import { downloadInsightJson } from '../../lib/downloadInsightJson';
 import type { StoredAnalysisEntry } from '../../lib/analysisHistory/types';
+import { SectionDisplayTitle } from '../../styles/sectionDisplayTitle';
 import { SimpleButton } from '../SimpleButton';
 import {
   HistoryActions,
-  HistoryHeading,
   HistoryItem,
   HistoryItemMeta,
   HistoryItemSummary,
   HistoryItemTitle,
+  HistoryHeader,
   HistoryLead,
   HistoryList,
   HistorySection,
-  HistoryToolbar,
 } from './AnalysisHistory.styles';
 
 export type AnalysisHistoryProps = {
@@ -29,20 +29,21 @@ export function AnalysisHistory({
 }: AnalysisHistoryProps) {
   return (
     <HistorySection aria-labelledby="analysis-history-heading">
-      <HistoryHeading id="analysis-history-heading">
-        {HISTORY_COPY.heading}
-      </HistoryHeading>
-      <HistoryLead>{HISTORY_COPY.lead}</HistoryLead>
+      <HistoryHeader>
+        <SectionDisplayTitle id="analysis-history-heading">
+          {HISTORY_COPY.heading}
+        </SectionDisplayTitle>
+        {entries.length > 0 && (
+          <SimpleButton onClick={onClearHistory}>
+            {HISTORY_COPY.buttonClearAll}
+          </SimpleButton>
+        )}
+      </HistoryHeader>
 
       {entries.length === 0 ? (
         <HistoryLead>{HISTORY_COPY.empty}</HistoryLead>
       ) : (
         <>
-          <HistoryToolbar>
-            <SimpleButton onClick={onClearHistory}>
-              {HISTORY_COPY.buttonClearAll}
-            </SimpleButton>
-          </HistoryToolbar>
           <HistoryList>
             {entries.map((entry) => {
               const { document: doc, summary } = entry.insight;

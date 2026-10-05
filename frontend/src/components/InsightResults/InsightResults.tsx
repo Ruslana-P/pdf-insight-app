@@ -6,16 +6,17 @@ import {
   BulletItem,
   BulletList,
   DataTable,
-  DownloadRow,
   EmptyHint,
   KeywordItem,
   KeywordList,
   MetaList,
   MetaTerm,
   MetaValue,
+  DocumentSectionTitle,
   ResultsBlock,
   ResultsHeading,
   ResultsSection,
+  ResultsSectionHeader,
   SubHeading,
   SummaryText,
   TableCell,
@@ -77,7 +78,12 @@ export function InsightResults({ insight }: InsightResultsProps) {
   return (
     <ResultsSection aria-label={RESULTS_COPY.summaryHeading}>
       <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.documentHeading}</ResultsHeading>
+        <ResultsSectionHeader>
+          <DocumentSectionTitle>{RESULTS_COPY.documentHeading}</DocumentSectionTitle>
+          <SimpleButton onClick={handleDownloadClick}>
+            {RESULTS_COPY.buttonDownloadJson}
+          </SimpleButton>
+        </ResultsSectionHeader>
         <MetaList>
           <MetaTerm>{RESULTS_COPY.documentFileName}</MetaTerm>
           <MetaValue>{doc.fileName}</MetaValue>
@@ -188,12 +194,6 @@ export function InsightResults({ insight }: InsightResultsProps) {
           </KeywordList>
         )}
       </ResultsBlock>
-
-      <DownloadRow>
-        <SimpleButton onClick={handleDownloadClick}>
-          {RESULTS_COPY.buttonDownloadJson}
-        </SimpleButton>
-      </DownloadRow>
     </ResultsSection>
   );
 }

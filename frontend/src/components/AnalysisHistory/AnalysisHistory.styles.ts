@@ -1,14 +1,18 @@
 import styled from 'styled-components';
+import { media } from '../../styles/media';
+import { sectionDividerTop } from '../../styles/sectionDivider';
 
 export const HistorySection = styled.section`
-  margin-top: ${({ theme }) => theme.space.xl};
-  padding-top: ${({ theme }) => theme.space.md};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  ${sectionDividerTop}
 `;
 
-export const HistoryHeading = styled.h2`
-  margin: 0 0 ${({ theme }) => theme.space.xs};
-  font-size: 1.125rem;
+export const HistoryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.space.sm};
+  margin-bottom: ${({ theme }) => theme.space.md};
 `;
 
 export const HistoryLead = styled.p`
@@ -31,34 +35,61 @@ export const HistoryItem = styled.li`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md};
   background: ${({ theme }) => theme.colors.surface};
+
+  ${media.tablet} {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: ${({ theme }) => theme.space.md};
+    align-items: start;
+  }
 `;
 
 export const HistoryItemTitle = styled.p`
   margin: 0 0 ${({ theme }) => theme.space.xs};
   font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  ${media.tablet} {
+    grid-column: 1;
+    grid-row: 1;
+  }
 `;
 
 export const HistoryItemMeta = styled.p`
   margin: 0 0 ${({ theme }) => theme.space.sm};
   color: ${({ theme }) => theme.colors.textMuted};
   font-size: 0.875rem;
+
+  ${media.tablet} {
+    grid-column: 1;
+    grid-row: 2;
+    margin-bottom: 0;
+  }
 `;
 
 export const HistoryItemSummary = styled.p`
   margin: 0 0 ${({ theme }) => theme.space.sm};
   line-height: 1.5;
   font-size: 0.9375rem;
+
+  ${media.tablet} {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: ${({ theme }) => theme.space.sm};
+    margin-bottom: 0;
+  }
 `;
 
 export const HistoryActions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.space.sm};
-`;
 
-export const HistoryToolbar = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.space.sm};
-  margin-bottom: ${({ theme }) => theme.space.md};
+  ${media.tablet} {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    justify-self: end;
+    align-self: start;
+  }
 `;

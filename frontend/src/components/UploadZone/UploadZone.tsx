@@ -2,7 +2,7 @@ import { useRef, useState, type DragEvent } from 'react';
 import { SimpleButton } from '../SimpleButton';
 import { UPLOAD_COPY } from '../../lib/constants';
 import { PDF_ACCEPT } from '../../lib/validatePdfFile';
-import { DropArea, HiddenInput, Root } from './UploadZone.styles';
+import { DropArea, HiddenInput, Root, UploadButtonWrap } from './UploadZone.styles';
 
 export type UploadZoneProps = {
   onFilePicked: (file: File) => void;
@@ -92,13 +92,15 @@ export function UploadZone({
       >
         {UPLOAD_COPY.dropAreaHint}
       </DropArea>
-      <SimpleButton
-        isDisabled={isInputDisabled}
-        onClick={openFileDialog}
-        ariaDescribedBy={uploadErrorElementId}
-      >
-        {uploadButtonLabel}
-      </SimpleButton>
+      <UploadButtonWrap>
+        <SimpleButton
+          isDisabled={isInputDisabled}
+          onClick={openFileDialog}
+          ariaDescribedBy={uploadErrorElementId}
+        >
+          {uploadButtonLabel}
+        </SimpleButton>
+      </UploadButtonWrap>
     </Root>
   );
 }

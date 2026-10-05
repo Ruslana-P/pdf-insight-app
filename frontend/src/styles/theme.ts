@@ -1,12 +1,15 @@
 export const theme = {
   colors: {
-    bg: '#0f1419',
-    surface: '#1a2332',
+    bg: 'rgba(6, 6, 8, 0.92)',
+    surface: '#121218',
     border: '#2d3a4f',
     text: '#e8eef4',
     textMuted: '#9aa8b8',
     accent: '#3b82f6',
     accentHover: '#2563eb',
+    buttonBorder: '#9eff00',
+    buttonText: '#9eff00',
+    dropzone: '#00e5ff',
     error: '#f87171',
     success: '#4ade80',
   },
@@ -23,11 +26,17 @@ export const theme = {
     lg: '14px',
   },
   font: {
-    sans: '"Segoe UI", system-ui, -apple-system, sans-serif',
+    sans: '"DM Sans", sans-serif',
+    display: '"Bebas Neue", sans-serif',
     mono: 'ui-monospace, "Cascadia Code", monospace',
   },
   breakpoints: {
+    /** Minimum supported viewport (recruitment brief). */
     minWidth: '360px',
+    /** Mobile-first: default styles target minWidth … tablet − 1. */
+    tablet: '768px',
+    /** Tablet … web − 1. */
+    web: '1024px',
   },
 } as const;
 
