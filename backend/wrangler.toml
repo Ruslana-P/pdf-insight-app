@@ -1,0 +1,6 @@
+name = "pdf-insight-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Non-secret config only. Set OPENAI_API_KEY via: wrangler secret put OPENAI_API_KEY
