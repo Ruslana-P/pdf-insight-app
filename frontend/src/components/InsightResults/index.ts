@@ -1,0 +1,1 @@
+export { InsightResults } from './InsightResults';

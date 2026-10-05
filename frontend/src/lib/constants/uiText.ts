@@ -18,8 +18,40 @@ export const ANALYSIS_COPY = {
   buttonRetry: 'Spróbuj ponownie',
   loadingReadPdf: 'Wczytywanie tekstu z PDF…',
   loadingAnalyze: 'Analiza dokumentu…',
+} as const;
+
+export const RESULTS_COPY = {
+  documentHeading: 'Dokument',
   summaryHeading: 'Podsumowanie',
   keyPointsHeading: 'Kluczowe informacje',
+  entitiesHeading: 'Podmioty',
+  organizationsLabel: 'Organizacje',
+  peopleLabel: 'Osoby',
+  amountsHeading: 'Kwoty',
+  datesHeading: 'Daty',
+  keywordsHeading: 'Słowa kluczowe',
+  buttonDownloadJson: 'Pobierz JSON',
+  emptyList: 'Brak danych.',
+  documentFileName: 'Nazwa pliku',
+  documentPages: 'Liczba stron',
+  documentLanguage: 'Język',
+  documentType: 'Typ dokumentu',
+  documentTitle: 'Tytuł',
+  documentDate: 'Data dokumentu',
+  amountValue: 'Kwota',
+  amountCurrency: 'Waluta',
+  amountContext: 'Kontekst',
+  dateValue: 'Data',
+  dateContext: 'Kontekst',
+  notProvided: '—',
+} as const;
+
+export const DOCUMENT_TYPE_LABELS = {
+  faktura: 'Faktura',
+  umowa: 'Umowa',
+  oferta: 'Oferta',
+  raport: 'Raport',
+  inne: 'Inne',
 } as const;
 
 export const API_MESSAGES = {

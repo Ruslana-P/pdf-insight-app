@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { analyzeDocument } from '../api/analyzeDocument';
+import { InsightResults } from '../components/InsightResults';
 import { SimpleButton } from '../components/SimpleButton';
 import { UploadZone } from '../components/UploadZone';
 import { ANALYSIS_COPY, APP_COPY, DOM_IDS } from '../lib/constants';
@@ -12,14 +13,9 @@ import {
   ErrorText,
   FileInfo,
   Instructions,
-  KeyPointItem,
-  KeyPointsList,
   Lead,
   Page,
-  ResultsHeading,
-  ResultsSection,
   StatusText,
-  SummaryText,
   Title,
 } from './App.styles';
 
@@ -148,18 +144,7 @@ function App() {
         </ErrorText>
       )}
 
-      {insightResult && !analysisError && (
-        <ResultsSection>
-          <ResultsHeading>{ANALYSIS_COPY.summaryHeading}</ResultsHeading>
-          <SummaryText>{insightResult.summary}</SummaryText>
-          <ResultsHeading>{ANALYSIS_COPY.keyPointsHeading}</ResultsHeading>
-          <KeyPointsList>
-            {insightResult.keyPoints.map((point) => (
-              <KeyPointItem key={point}>{point}</KeyPointItem>
-            ))}
-          </KeyPointsList>
-        </ResultsSection>
-      )}
+      {insightResult && !analysisError && <InsightResults insight={insightResult} />}
     </Page>
   );
 }
