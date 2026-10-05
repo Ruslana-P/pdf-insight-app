@@ -1,3 +1,4 @@
+import { useId, useMemo, useState } from 'react';
 import { SimpleButton } from '../SimpleButton';
 import { DOCUMENT_TYPE_LABELS, RESULTS_COPY } from '../../lib/constants';
 import { downloadInsightJson } from '../../lib/downloadInsightJson';
@@ -7,25 +8,34 @@ import {
   BulletList,
   DataTable,
   EmptyHint,
+  JsonPreview,
   KeywordItem,
   KeywordList,
   MetaList,
   MetaTerm,
   MetaValue,
   DocumentSectionTitle,
+  FooterDownloadRow,
+  HeaderDownloadWrap,
+  ResponsiveResultsStack,
   ResultsBlock,
-  ResultsHeading,
+  ResultsHeaderActions,
   ResultsSection,
   ResultsSectionHeader,
   SubHeading,
   SummaryText,
   TableCell,
   TableHeadCell,
+  ViewModeButton,
+  ViewModeSwitch,
 } from './InsightResults.styles';
+import { ResponsiveResultsSection } from './ResponsiveResultsSection';
 
 export type InsightResultsProps = {
   insight: DocumentInsight;
 };
+
+type ViewMode = 'text' | 'json';
 
 function formatOptionalText(value: string | null): string {
   if (value === null || value.trim().length === 0) {
@@ -60,7 +70,7 @@ function StringListSection({
   );
 }
 
-export function InsightResults({ insight }: InsightResultsProps) {
+function StructuredResultsView({ insight }: { insight: DocumentInsight }) {
   const {
     document: doc,
     amounts,
@@ -71,19 +81,9 @@ export function InsightResults({ insight }: InsightResultsProps) {
     summary,
   } = insight;
 
-  function handleDownloadClick() {
-    downloadInsightJson(insight);
-  }
-
   return (
-    <ResultsSection aria-label={RESULTS_COPY.summaryHeading}>
+    <>
       <ResultsBlock>
-        <ResultsSectionHeader>
-          <DocumentSectionTitle>{RESULTS_COPY.documentHeading}</DocumentSectionTitle>
-          <SimpleButton onClick={handleDownloadClick}>
-            {RESULTS_COPY.buttonDownloadJson}
-          </SimpleButton>
-        </ResultsSectionHeader>
         <MetaList>
           <MetaTerm>{RESULTS_COPY.documentFileName}</MetaTerm>
           <MetaValue>{doc.fileName}</MetaValue>
@@ -100,99 +100,196 @@ export function InsightResults({ insight }: InsightResultsProps) {
         </MetaList>
       </ResultsBlock>
 
-      <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.summaryHeading}</ResultsHeading>
-        <SummaryText>{summary}</SummaryText>
-      </ResultsBlock>
-
-      <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.keyPointsHeading}</ResultsHeading>
-        {keyPoints.length === 0 ? (
-          <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
-        ) : (
-          <BulletList>
-            {keyPoints.map((point, index) => (
-              <BulletItem key={`key-point-${index}`}>{point}</BulletItem>
-            ))}
-          </BulletList>
-        )}
-      </ResultsBlock>
-
-      <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.entitiesHeading}</ResultsHeading>
-        <StringListSection
-          heading={RESULTS_COPY.organizationsLabel}
-          items={entities.organizations}
-          emptyLabel={RESULTS_COPY.emptyList}
+      <ResponsiveResultsStack>
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.summaryHeading}
+          defaultExpanded
+          renderContent={() => <SummaryText>{summary}</SummaryText>}
         />
-        <StringListSection
-          heading={RESULTS_COPY.peopleLabel}
-          items={entities.people}
-          emptyLabel={RESULTS_COPY.emptyList}
+
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.keyPointsHeading}
+          renderContent={() =>
+            keyPoints.length === 0 ? (
+              <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
+            ) : (
+              <BulletList>
+                {keyPoints.map((point, index) => (
+                  <BulletItem key={`key-point-${index}`}>{point}</BulletItem>
+                ))}
+              </BulletList>
+            )
+          }
         />
-      </ResultsBlock>
 
-      <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.amountsHeading}</ResultsHeading>
-        {amounts.length === 0 ? (
-          <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
-        ) : (
-          <DataTable>
-            <thead>
-              <tr>
-                <TableHeadCell scope="col">{RESULTS_COPY.amountValue}</TableHeadCell>
-                <TableHeadCell scope="col">{RESULTS_COPY.amountCurrency}</TableHeadCell>
-                <TableHeadCell scope="col">{RESULTS_COPY.amountContext}</TableHeadCell>
-              </tr>
-            </thead>
-            <tbody>
-              {amounts.map((amount, index) => (
-                <tr key={`amount-${index}`}>
-                  <TableCell>{amount.value}</TableCell>
-                  <TableCell>{amount.currency}</TableCell>
-                  <TableCell>{amount.context}</TableCell>
-                </tr>
-              ))}
-            </tbody>
-          </DataTable>
-        )}
-      </ResultsBlock>
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.entitiesHeading}
+          renderContent={() => (
+            <>
+              <StringListSection
+                heading={RESULTS_COPY.organizationsLabel}
+                items={entities.organizations}
+                emptyLabel={RESULTS_COPY.emptyList}
+              />
+              <StringListSection
+                heading={RESULTS_COPY.peopleLabel}
+                items={entities.people}
+                emptyLabel={RESULTS_COPY.emptyList}
+              />
+            </>
+          )}
+        />
 
-      <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.datesHeading}</ResultsHeading>
-        {dates.length === 0 ? (
-          <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
-        ) : (
-          <DataTable>
-            <thead>
-              <tr>
-                <TableHeadCell scope="col">{RESULTS_COPY.dateValue}</TableHeadCell>
-                <TableHeadCell scope="col">{RESULTS_COPY.dateContext}</TableHeadCell>
-              </tr>
-            </thead>
-            <tbody>
-              {dates.map((entry, index) => (
-                <tr key={`date-${index}`}>
-                  <TableCell>{entry.date}</TableCell>
-                  <TableCell>{entry.context}</TableCell>
-                </tr>
-              ))}
-            </tbody>
-          </DataTable>
-        )}
-      </ResultsBlock>
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.amountsHeading}
+          renderContent={() =>
+            amounts.length === 0 ? (
+              <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
+            ) : (
+              <DataTable>
+                <thead>
+                  <tr>
+                    <TableHeadCell scope="col">
+                      {RESULTS_COPY.amountValue}
+                    </TableHeadCell>
+                    <TableHeadCell scope="col">
+                      {RESULTS_COPY.amountCurrency}
+                    </TableHeadCell>
+                    <TableHeadCell scope="col">
+                      {RESULTS_COPY.amountContext}
+                    </TableHeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {amounts.map((amount, index) => (
+                    <tr key={`amount-${index}`}>
+                      <TableCell>{amount.value}</TableCell>
+                      <TableCell>{amount.currency}</TableCell>
+                      <TableCell>{amount.context}</TableCell>
+                    </tr>
+                  ))}
+                </tbody>
+              </DataTable>
+            )
+          }
+        />
 
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.datesHeading}
+          renderContent={() =>
+            dates.length === 0 ? (
+              <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
+            ) : (
+              <DataTable>
+                <thead>
+                  <tr>
+                    <TableHeadCell scope="col">{RESULTS_COPY.dateValue}</TableHeadCell>
+                    <TableHeadCell scope="col">
+                      {RESULTS_COPY.dateContext}
+                    </TableHeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dates.map((entry, index) => (
+                    <tr key={`date-${index}`}>
+                      <TableCell>{entry.date}</TableCell>
+                      <TableCell>{entry.context}</TableCell>
+                    </tr>
+                  ))}
+                </tbody>
+              </DataTable>
+            )
+          }
+        />
+
+        <ResponsiveResultsSection
+          title={RESULTS_COPY.keywordsHeading}
+          renderContent={() =>
+            keywords.length === 0 ? (
+              <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
+            ) : (
+              <KeywordList>
+                {keywords.map((keyword, index) => (
+                  <KeywordItem key={`keyword-${index}`}>{keyword}</KeywordItem>
+                ))}
+              </KeywordList>
+            )
+          }
+        />
+      </ResponsiveResultsStack>
+    </>
+  );
+}
+
+export function InsightResults({ insight }: InsightResultsProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>('text');
+  const textPanelId = useId();
+  const jsonPanelId = useId();
+
+  const jsonPreview = useMemo(() => JSON.stringify(insight, null, 2), [insight]);
+
+  function handleDownloadClick() {
+    downloadInsightJson(insight);
+  }
+
+  return (
+    <ResultsSection aria-label={RESULTS_COPY.documentHeading}>
       <ResultsBlock>
-        <ResultsHeading>{RESULTS_COPY.keywordsHeading}</ResultsHeading>
-        {keywords.length === 0 ? (
-          <EmptyHint>{RESULTS_COPY.emptyList}</EmptyHint>
+        <ResultsSectionHeader>
+          <DocumentSectionTitle>{RESULTS_COPY.documentHeading}</DocumentSectionTitle>
+          <ResultsHeaderActions>
+            <ViewModeSwitch
+              role="tablist"
+              aria-label={RESULTS_COPY.viewModeSwitchLabel}
+            >
+              <ViewModeButton
+                type="button"
+                role="tab"
+                id={`${textPanelId}-tab`}
+                aria-selected={viewMode === 'text'}
+                aria-controls={textPanelId}
+                $active={viewMode === 'text'}
+                onClick={() => setViewMode('text')}
+              >
+                {RESULTS_COPY.viewModeText}
+              </ViewModeButton>
+              <ViewModeButton
+                type="button"
+                role="tab"
+                id={`${jsonPanelId}-tab`}
+                aria-selected={viewMode === 'json'}
+                aria-controls={jsonPanelId}
+                $active={viewMode === 'json'}
+                onClick={() => setViewMode('json')}
+              >
+                {RESULTS_COPY.viewModeJson}
+              </ViewModeButton>
+            </ViewModeSwitch>
+            <HeaderDownloadWrap>
+              <SimpleButton onClick={handleDownloadClick}>
+                {RESULTS_COPY.buttonDownloadJson}
+              </SimpleButton>
+            </HeaderDownloadWrap>
+          </ResultsHeaderActions>
+        </ResultsSectionHeader>
+
+        {viewMode === 'text' ? (
+          <div role="tabpanel" id={textPanelId} aria-labelledby={`${textPanelId}-tab`}>
+            <StructuredResultsView insight={insight} />
+          </div>
         ) : (
-          <KeywordList>
-            {keywords.map((keyword, index) => (
-              <KeywordItem key={`keyword-${index}`}>{keyword}</KeywordItem>
-            ))}
-          </KeywordList>
+          <div role="tabpanel" id={jsonPanelId} aria-labelledby={`${jsonPanelId}-tab`}>
+            <JsonPreview aria-label={RESULTS_COPY.jsonPreviewAriaLabel}>
+              {jsonPreview}
+            </JsonPreview>
+          </div>
         )}
+
+        <FooterDownloadRow>
+          <SimpleButton onClick={handleDownloadClick}>
+            {RESULTS_COPY.buttonDownloadJson}
+          </SimpleButton>
+        </FooterDownloadRow>
       </ResultsBlock>
     </ResultsSection>
   );

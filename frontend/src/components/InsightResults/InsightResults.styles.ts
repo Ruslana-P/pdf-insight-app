@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { media } from '../../styles/media';
 import { SectionDisplayTitle } from '../../styles/sectionDisplayTitle';
 
 export const ResultsSection = styled.section`
@@ -30,9 +31,141 @@ export const ResultsSectionHeader = styled.div`
   margin-bottom: ${({ theme }) => theme.space.md};
 `;
 
+export const ResultsHeaderActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: ${({ theme }) => theme.space.sm};
+`;
+
+export const HeaderDownloadWrap = styled.div`
+  display: none;
+
+  ${media.tablet} {
+    display: flex;
+    align-items: stretch;
+
+    button {
+      height: auto;
+      align-self: stretch;
+    }
+  }
+`;
+
+export const FooterDownloadRow = styled.div`
+  display: block;
+  width: 100%;
+  margin-top: ${({ theme }) => theme.space.lg};
+
+  button {
+    width: 100%;
+  }
+
+  ${media.tablet} {
+    display: none;
+  }
+`;
+
+export const ViewModeSwitch = styled.div`
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid ${({ theme }) => theme.colors.buttonBorder};
+`;
+
+export const ViewModeButton = styled.button<{ $active: boolean }>`
+  margin: 0;
+  padding: ${({ theme }) => `${theme.space.sm} ${theme.space.lg}`};
+  font: inherit;
+  line-height: 1.5;
+  color: ${({ theme, $active }) => ($active ? '#060608' : theme.colors.buttonText)};
+  background: ${({ theme, $active }) =>
+    $active ? theme.colors.buttonBorder : 'transparent'};
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    border-right: 1px solid ${({ theme }) => theme.colors.buttonBorder};
+  }
+
+  &:hover:not(:disabled) {
+    background: ${({ theme, $active }) =>
+      $active ? theme.colors.buttonBorder : 'rgba(158, 255, 0, 0.08)'};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.dropzone};
+    outline-offset: 2px;
+    z-index: 1;
+  }
+`;
+
+export const JsonPreview = styled.pre`
+  margin: 0;
+  padding: ${({ theme }) => theme.space.md};
+  max-height: min(70vh, 40rem);
+  overflow: auto;
+  font-family: ${({ theme }) => theme.font.mono};
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+`;
+
 export const ResultsHeading = styled.h2`
   margin: 0 0 ${({ theme }) => theme.space.sm};
   font-size: 1.125rem;
+`;
+
+export const ResponsiveResultsStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.sm};
+
+  ${media.web} {
+    gap: 0;
+  }
+`;
+
+export const ResponsiveSectionWrap = styled.div`
+  min-width: 0;
+
+  ${media.web} {
+    margin-bottom: ${({ theme }) => theme.space.lg};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
+
+export const WebSectionHeading = styled(ResultsHeading)`
+  display: none;
+
+  ${media.web} {
+    display: block;
+  }
+`;
+
+export const WebSectionBody = styled.div`
+  display: none;
+
+  ${media.web} {
+    display: block;
+  }
+`;
+
+export const MobileAccordionShell = styled.div`
+  ${media.web} {
+    display: none;
+  }
+`;
+
+export const CollapsiblePanel = styled.div<{ $expanded: boolean }>`
+  display: ${({ $expanded }) => ($expanded ? 'block' : 'none')};
 `;
 
 export const SubHeading = styled.h3`

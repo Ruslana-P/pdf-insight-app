@@ -77,7 +77,12 @@ export function DocumentAnalysis({ onAnalysisSuccess }: DocumentAnalysisProps) {
         </ErrorText>
       )}
 
-      {insightResult && !analysisError && <InsightResults insight={insightResult} />}
+      {insightResult && !analysisError && (
+        <InsightResults
+          key={`${insightResult.document.fileName}-${insightResult.summary}`}
+          insight={insightResult}
+        />
+      )}
     </>
   );
 }
