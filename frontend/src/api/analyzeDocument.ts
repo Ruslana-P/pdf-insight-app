@@ -40,7 +40,10 @@ export async function analyzeDocument(
   }
 
   if (!response.ok) {
-    return { ok: false, error: parseAnalyzeErrorPayload(payload) };
+    return {
+      ok: false,
+      error: parseAnalyzeErrorPayload(payload, response.status),
+    };
   }
 
   return parseAnalyzeSuccessPayload(payload);

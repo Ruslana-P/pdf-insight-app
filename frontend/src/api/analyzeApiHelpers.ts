@@ -11,14 +11,16 @@ export function getAnalyzeApiBaseUrl(): string | null {
   return url.replace(/\/$/, '');
 }
 
-export function parseAnalyzeErrorPayload(payload: unknown): string {
-  if (
-    typeof payload === 'object' &&
-    payload !== null &&
-    'error' in payload &&
-    typeof payload.error === 'string'
-  ) {
-    return payload.error;
+export function parseAnalyzeErrorPayload(payload: unknown, httpStatus: number): string {
+  if (httpStatus === 400) {
+    if (
+      typeof payload === 'object' &&
+      payload !== null &&
+      'error' in payload &&
+      typeof payload.error === 'string'
+    ) {
+      return payload.error;
+    }
   }
 
   return API_MESSAGES.analyzeFailed;

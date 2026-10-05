@@ -1,10 +1,15 @@
-import { buildMockInsightResponse, parseAnalyzeRequest } from './analyzeHelpers';
+import type { Env } from '../env';
+import { analyzeWithGemini } from './analyzeWithGemini';
+import { parseAnalyzeRequest } from './analyzeHelpers';
 import type { DocumentInsight } from './types';
 
 type AnalyzeApiResult =
   { ok: true; data: DocumentInsight } | { ok: false; error: string; status: number };
 
-export async function analyzeApi(request: Request): Promise<AnalyzeApiResult> {
+export async function analyzeApi(
+  request: Request,
+  env: Env,
+): Promise<AnalyzeApiResult> {
   let payload: unknown;
 
   try {
@@ -19,8 +24,5 @@ export async function analyzeApi(request: Request): Promise<AnalyzeApiResult> {
     return { ok: false, error: parsed.error, status: 400 };
   }
 
-  return {
-    ok: true,
-    data: buildMockInsightResponse(parsed.body),
-  };
+  return analyzeWithGemini(parsed.body, env);
 }

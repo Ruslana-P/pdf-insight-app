@@ -1,4 +1,4 @@
-import type { AnalyzeRequestBody, DocumentInsight } from './types';
+import type { AnalyzeRequestBody } from './types';
 
 type ParseResult =
   { ok: true; body: AnalyzeRequestBody } | { ok: false; error: string };
@@ -33,35 +33,5 @@ export function parseAnalyzeRequest(payload: unknown): ParseResult {
       pages: Math.floor(pages),
       text,
     },
-  };
-}
-
-export function buildMockInsightResponse(body: AnalyzeRequestBody): DocumentInsight {
-  const previewWords = body.text.trim().split(/\s+/).slice(0, 12).join(' ');
-
-  return {
-    document: {
-      fileName: body.fileName,
-      pages: body.pages,
-      language: 'pl',
-      type: 'inne',
-      title: null,
-      date: null,
-    },
-    summary: `To mockowane podsumowanie dokumentu „${body.fileName}”. W wersji produkcyjnej treść zostanie wygenerowana przez model AI na podstawie przesłanego tekstu.`,
-    keyPoints: [
-      `Plik zawiera ${body.pages} stron(y).`,
-      `Przesłano ${body.text.length} znaków tekstu do analizy.`,
-      previewWords
-        ? `Fragment treści: ${previewWords}…`
-        : 'Brak podglądu treści w mocku.',
-    ],
-    entities: {
-      organizations: [],
-      people: [],
-    },
-    amounts: [],
-    dates: [],
-    keywords: ['mock', 'pdf-insight'],
   };
 }

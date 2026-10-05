@@ -7,7 +7,6 @@ export type { Env };
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    void env;
     const origin = request.headers.get('Origin');
     const cors = buildCorsHeaders(origin);
 
@@ -22,7 +21,7 @@ export default {
     }
 
     if (url.pathname === '/analyze' && request.method === 'POST') {
-      const result = await analyzeApi(request);
+      const result = await analyzeApi(request, env);
 
       if (!result.ok) {
         return createJsonResponse({ error: result.error }, result.status, origin);

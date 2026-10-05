@@ -1,3 +1,4 @@
 export interface Env {
-  OPENAI_API_KEY?: string;
+  GEMINI_API_KEY?: string;
+  GEMINI_MODEL?: string;
 }

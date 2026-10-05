@@ -58,7 +58,7 @@ export const API_MESSAGES = {
   missingApiUrl: 'Brak adresu API (VITE_API_URL).',
   networkError: 'Błąd połączenia z serwerem. Spróbuj ponownie.',
   invalidResponse: 'Serwer zwrócił nieprawidłową odpowiedź.',
-  analyzeFailed: 'Analiza nie powiodła się. Spróbuj ponownie.',
+  analyzeFailed: 'Analiza nie udała się. Spróbuj ponownie lub później.',
   invalidInsightSchema:
     'Odpowiedź serwera nie spełnia wymaganego formatu. Spróbuj ponownie.',
 } as const;
