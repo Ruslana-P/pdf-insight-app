@@ -16,9 +16,19 @@ export const UPLOAD_COPY = {
 export const ANALYSIS_COPY = {
   buttonAnalyze: 'Analizuj',
   buttonRetry: 'Spróbuj ponownie',
-  loading: 'Wczytywanie tekstu z PDF…',
-  extractSuccess: 'Tekst został wczytany. Stron:',
-  charactersLabel: 'Znaków:',
+  loadingReadPdf: 'Wczytywanie tekstu z PDF…',
+  loadingAnalyze: 'Analiza dokumentu…',
+  summaryHeading: 'Podsumowanie',
+  keyPointsHeading: 'Kluczowe informacje',
+} as const;
+
+export const API_MESSAGES = {
+  missingApiUrl: 'Brak adresu API (VITE_API_URL).',
+  networkError: 'Błąd połączenia z serwerem. Spróbuj ponownie.',
+  invalidResponse: 'Serwer zwrócił nieprawidłową odpowiedź.',
+  analyzeFailed: 'Analiza nie powiodła się. Spróbuj ponownie.',
+  invalidInsightSchema:
+    'Odpowiedź serwera nie spełnia wymaganego formatu. Spróbuj ponownie.',
 } as const;
 
 export const EXTRACTION_MESSAGES = {

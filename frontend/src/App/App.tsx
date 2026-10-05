@@ -1,45 +1,46 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { analyzeDocument } from '../api/analyzeDocument';
 import { SimpleButton } from '../components/SimpleButton';
 import { UploadZone } from '../components/UploadZone';
 import { ANALYSIS_COPY, APP_COPY, DOM_IDS } from '../lib/constants';
 import { extractPdfText } from '../lib/extractPdfText';
 import { formatFileSize } from '../lib/formatFileSize';
+import type { DocumentInsight } from '../lib/types/documentInsight';
 import { validatePdfFile } from '../lib/validatePdfFile';
 import {
   ActionsRow,
   ErrorText,
   FileInfo,
   Instructions,
+  KeyPointItem,
+  KeyPointsList,
   Lead,
   Page,
+  ResultsHeading,
+  ResultsSection,
   StatusText,
-  SuccessText,
+  SummaryText,
   Title,
 } from './App.styles';
 
-type ExtractionSnapshot = {
-  pages: number;
-  characterCount: number;
-};
+type AnalysisPhase = 'idle' | 'readingPdf' | 'callingApi';
 
 function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('idle');
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const [extractionSnapshot, setExtractionSnapshot] =
-    useState<ExtractionSnapshot | null>(null);
-  const extractedTextRef = useRef<string | null>(null);
+  const [insightResult, setInsightResult] = useState<DocumentInsight | null>(null);
 
+  const isAnalyzing = analysisPhase !== 'idle';
   const isLoadedFileInvalid = validationError !== null;
   const hasValidFile = selectedFile !== null && !validationError;
   const hasAnalysisError = analysisError !== null;
 
   function resetAnalysisState() {
-    setIsAnalyzing(false);
+    setAnalysisPhase('idle');
     setAnalysisError(null);
-    setExtractionSnapshot(null);
-    extractedTextRef.current = null;
+    setInsightResult(null);
   }
 
   function handleFilePicked(file: File) {
@@ -62,33 +63,44 @@ function App() {
       return;
     }
 
-    setIsAnalyzing(true);
+    setAnalysisPhase('readingPdf');
     setAnalysisError(null);
-    setExtractionSnapshot(null);
-    extractedTextRef.current = null;
+    setInsightResult(null);
 
-    const result = await extractPdfText(selectedFile);
+    const extraction = await extractPdfText(selectedFile);
 
-    setIsAnalyzing(false);
-
-    if (!result.ok) {
-      setAnalysisError(result.error);
+    if (!extraction.ok) {
+      setAnalysisPhase('idle');
+      setAnalysisError(extraction.error);
       return;
     }
 
-    extractedTextRef.current = result.text;
-    setExtractionSnapshot({
-      pages: result.pages,
-      characterCount: result.text.length,
+    setAnalysisPhase('callingApi');
+
+    const analysis = await analyzeDocument({
+      fileName: extraction.fileName,
+      pages: extraction.pages,
+      text: extraction.text,
     });
 
-    // eslint-disable-next-line no-console -- tymczasowy podgląd ekstrakcji (usuń przed produkcją)
-    console.log('[PDF Insight] extracted text:', result.text);
+    setAnalysisPhase('idle');
+
+    if (!analysis.ok) {
+      setAnalysisError(analysis.error);
+      return;
+    }
+
+    setInsightResult(analysis.data);
   }
 
   const analyzeButtonLabel = hasAnalysisError
     ? ANALYSIS_COPY.buttonRetry
     : ANALYSIS_COPY.buttonAnalyze;
+
+  const loadingMessage =
+    analysisPhase === 'readingPdf'
+      ? ANALYSIS_COPY.loadingReadPdf
+      : ANALYSIS_COPY.loadingAnalyze;
 
   return (
     <Page>
@@ -128,7 +140,7 @@ function App() {
         </ActionsRow>
       )}
 
-      {isAnalyzing && <StatusText>{ANALYSIS_COPY.loading}</StatusText>}
+      {isAnalyzing && <StatusText>{loadingMessage}</StatusText>}
 
       {analysisError && (
         <ErrorText id={DOM_IDS.analyzeError} role="alert">
@@ -136,11 +148,17 @@ function App() {
         </ErrorText>
       )}
 
-      {extractionSnapshot && !analysisError && (
-        <SuccessText>
-          {ANALYSIS_COPY.extractSuccess} {extractionSnapshot.pages},{' '}
-          {ANALYSIS_COPY.charactersLabel} {extractionSnapshot.characterCount}
-        </SuccessText>
+      {insightResult && !analysisError && (
+        <ResultsSection>
+          <ResultsHeading>{ANALYSIS_COPY.summaryHeading}</ResultsHeading>
+          <SummaryText>{insightResult.summary}</SummaryText>
+          <ResultsHeading>{ANALYSIS_COPY.keyPointsHeading}</ResultsHeading>
+          <KeyPointsList>
+            {insightResult.keyPoints.map((point) => (
+              <KeyPointItem key={point}>{point}</KeyPointItem>
+            ))}
+          </KeyPointsList>
+        </ResultsSection>
       )}
     </Page>
   );

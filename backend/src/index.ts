@@ -1,51 +1,36 @@
+import { analyzeApi } from './analyze';
 import { buildCorsHeaders } from './cors';
+import type { Env } from './env';
+import { createJsonResponse } from './http';
 
-export interface Env {
-  OPENAI_API_KEY: string;
-}
+export type { Env };
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const allowedOrigin = 'https://ruslana-p.github.io';
-    const cors = (origin: string | null) => buildCorsHeaders(origin, allowedOrigin);
+    void env;
+    const origin = request.headers.get('Origin');
+    const cors = buildCorsHeaders(origin);
 
     if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        headers: cors(request.headers.get('Origin')),
-      });
+      return new Response(null, { headers: cors });
     }
 
     const url = new URL(request.url);
 
     if (url.pathname === '/health' && request.method === 'GET') {
-      return Response.json(
-        { ok: true },
-        {
-          headers: cors(request.headers.get('Origin')),
-        },
-      );
+      return createJsonResponse({ ok: true }, 200, origin);
     }
 
     if (url.pathname === '/analyze' && request.method === 'POST') {
-      if (!env.OPENAI_API_KEY) {
-        return Response.json(
-          { error: 'Brak konfiguracji API po stronie serwera.' },
-          {
-            status: 500,
-            headers: cors(request.headers.get('Origin')),
-          },
-        );
+      const result = await analyzeApi(request);
+
+      if (!result.ok) {
+        return createJsonResponse({ error: result.error }, result.status, origin);
       }
 
-      return Response.json(
-        { error: 'Endpoint /analyze — w trakcie implementacji.' },
-        {
-          status: 501,
-          headers: cors(request.headers.get('Origin')),
-        },
-      );
+      return createJsonResponse(result.data, 200, origin);
     }
 
-    return new Response('Not Found', { status: 404 });
+    return new Response('Not Found', { status: 404, headers: cors });
   },
 };

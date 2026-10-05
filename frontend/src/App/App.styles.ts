@@ -44,7 +44,27 @@ export const StatusText = styled.p`
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-export const SuccessText = styled.p`
-  margin: ${({ theme }) => theme.space.md} 0 0;
-  color: ${({ theme }) => theme.colors.success};
+export const ResultsSection = styled.section`
+  margin-top: ${({ theme }) => theme.space.lg};
+  padding-top: ${({ theme }) => theme.space.md};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const ResultsHeading = styled.h2`
+  margin: 0 0 ${({ theme }) => theme.space.sm};
+  font-size: 1.125rem;
+`;
+
+export const SummaryText = styled.p`
+  margin: 0 0 ${({ theme }) => theme.space.md};
+  line-height: 1.6;
+`;
+
+export const KeyPointsList = styled.ul`
+  margin: 0;
+  padding-left: ${({ theme }) => theme.space.lg};
+`;
+
+export const KeyPointItem = styled.li`
+  margin-bottom: ${({ theme }) => theme.space.sm};
 `;
