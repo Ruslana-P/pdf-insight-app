@@ -74,6 +74,16 @@ export const VALIDATION_MESSAGES = {
   fileTooLarge: 'Plik jest za duży. Maksymalny rozmiar to 10 MB.',
 } as const;
 
+export const HISTORY_COPY = {
+  heading: 'Historia analiz',
+  lead: 'Ostatnie wyniki zapisane lokalnie w przeglądarce.',
+  empty: 'Brak zapisanych analiz.',
+  buttonDownloadJson: 'Pobierz JSON',
+  buttonRemove: 'Usuń',
+  buttonClearAll: 'Wyczyść historię',
+  pagesLabel: 'str.',
+} as const;
+
 export const DOM_IDS = {
   uploadError: 'upload-error',
   analyzeError: 'analyze-error',

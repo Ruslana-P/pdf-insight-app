@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { analyzeDocument } from '../api/analyzeDocument';
+import { AnalysisHistory } from '../components/AnalysisHistory';
 import { InsightResults } from '../components/InsightResults';
 import { SimpleButton } from '../components/SimpleButton';
 import { UploadZone } from '../components/UploadZone';
+import {
+  loadAnalysisHistory,
+  prependAnalysisHistoryEntry,
+  removeAnalysisHistoryEntry,
+  saveAnalysisHistory,
+} from '../lib/analysisHistory/analysisHistoryStorage';
+import type { StoredAnalysisEntry } from '../lib/analysisHistory/types';
 import { ANALYSIS_COPY, APP_COPY, DOM_IDS } from '../lib/constants';
 import { extractPdfText } from '../lib/extractPdfText';
 import { formatFileSize } from '../lib/formatFileSize';
@@ -27,11 +35,19 @@ function App() {
   const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('idle');
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [insightResult, setInsightResult] = useState<DocumentInsight | null>(null);
+  const [historyEntries, setHistoryEntries] = useState<StoredAnalysisEntry[]>(() =>
+    loadAnalysisHistory(),
+  );
 
   const isAnalyzing = analysisPhase !== 'idle';
   const isLoadedFileInvalid = validationError !== null;
   const hasValidFile = selectedFile !== null && !validationError;
   const hasAnalysisError = analysisError !== null;
+
+  function persistHistory(entries: StoredAnalysisEntry[]) {
+    setHistoryEntries(entries);
+    saveAnalysisHistory(entries);
+  }
 
   function resetAnalysisState() {
     setAnalysisPhase('idle');
@@ -87,6 +103,19 @@ function App() {
     }
 
     setInsightResult(analysis.data);
+    setHistoryEntries((previousEntries) => {
+      const nextEntries = prependAnalysisHistoryEntry(previousEntries, analysis.data);
+      saveAnalysisHistory(nextEntries);
+      return nextEntries;
+    });
+  }
+
+  function handleRemoveHistoryEntry(entryId: string) {
+    persistHistory(removeAnalysisHistoryEntry(historyEntries, entryId));
+  }
+
+  function handleClearHistory() {
+    persistHistory([]);
   }
 
   const analyzeButtonLabel = hasAnalysisError
@@ -145,6 +174,12 @@ function App() {
       )}
 
       {insightResult && !analysisError && <InsightResults insight={insightResult} />}
+
+      <AnalysisHistory
+        entries={historyEntries}
+        onRemoveEntry={handleRemoveHistoryEntry}
+        onClearHistory={handleClearHistory}
+      />
     </Page>
   );
 }
