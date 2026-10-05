@@ -13,16 +13,21 @@ export const Title = styled.h1`
 `;
 
 export const Lead = styled.p`
-  margin: 0 0 ${({ theme }) => theme.space.lg};
+  margin: 0 0 ${({ theme }) => theme.space.md};
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-export const Notice = styled.p`
-  margin: 0;
-  padding: ${({ theme }) => theme.space.md};
-  font-size: 0.875rem;
+export const Instructions = styled.p`
+  margin: 0 0 ${({ theme }) => theme.space.lg};
+  line-height: 1.6;
+`;
+
+export const ErrorText = styled.p`
+  margin: ${({ theme }) => theme.space.md} 0 0;
+  color: ${({ theme }) => theme.colors.error};
+`;
+
+export const FileInfo = styled.p`
+  margin: ${({ theme }) => theme.space.md} 0 0;
   color: ${({ theme }) => theme.colors.textMuted};
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radius.md};
 `;

@@ -1,0 +1,7 @@
+export {
+  ANALYSIS_COPY,
+  APP_COPY,
+  DOM_IDS,
+  UPLOAD_COPY,
+  VALIDATION_MESSAGES,
+} from './uiText';
