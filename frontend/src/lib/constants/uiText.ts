@@ -15,6 +15,15 @@ export const UPLOAD_COPY = {
 
 export const ANALYSIS_COPY = {
   buttonAnalyze: 'Analizuj',
+  buttonRetry: 'Spróbuj ponownie',
+  loading: 'Wczytywanie tekstu z PDF…',
+  extractSuccess: 'Tekst został wczytany. Stron:',
+  charactersLabel: 'Znaków:',
+} as const;
+
+export const EXTRACTION_MESSAGES = {
+  noTextLayer: 'Nie znaleziono warstwy tekstowej. Dokument może być skanem bez OCR.',
+  readFailed: 'Nie udało się odczytać pliku PDF. Spróbuj ponownie.',
 } as const;
 
 export const VALIDATION_MESSAGES = {
@@ -25,4 +34,5 @@ export const VALIDATION_MESSAGES = {
 
 export const DOM_IDS = {
   uploadError: 'upload-error',
+  analyzeError: 'analyze-error',
 } as const;

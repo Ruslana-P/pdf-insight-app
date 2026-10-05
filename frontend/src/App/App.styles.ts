@@ -31,3 +31,20 @@ export const FileInfo = styled.p`
   margin: ${({ theme }) => theme.space.md} 0 0;
   color: ${({ theme }) => theme.colors.textMuted};
 `;
+
+export const ActionsRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.space.md};
+  margin-top: ${({ theme }) => theme.space.md};
+`;
+
+export const StatusText = styled.p`
+  margin: ${({ theme }) => theme.space.md} 0 0;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
+
+export const SuccessText = styled.p`
+  margin: ${({ theme }) => theme.space.md} 0 0;
+  color: ${({ theme }) => theme.colors.success};
+`;

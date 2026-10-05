@@ -2,6 +2,7 @@ export {
   ANALYSIS_COPY,
   APP_COPY,
   DOM_IDS,
+  EXTRACTION_MESSAGES,
   UPLOAD_COPY,
   VALIDATION_MESSAGES,
 } from './uiText';
